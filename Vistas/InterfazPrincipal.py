@@ -1,5 +1,6 @@
 ﻿from tkinter import *
-from tkinter import ttk
+import tkinter as tk
+from PIL import ImageTk, Image
 from Vistas.InterfazApuestaSImple import InterfazApuestaSimple
 
 
@@ -7,27 +8,57 @@ class InterfacePrincipal:
 
     def initAsimples(self):
         win = Toplevel()
-        win.geometry('50x50')
-        InterfazApuestaSimple.__init__(self,win)
+        InterfazApuestaSimple.__init__(self, win)
 
     def __init__(self, ventana):
         self.ventana = ventana
         self.ventana.title("Bienvenido a la Casa de apuestas")
-        self.ventana.geometry("260x150")
-        marco = LabelFrame(self.ventana, text="Seleccione su tipo de apuesta")
-        marco.grid(row=0, column=0, pady=2, padx=2)
-        marco.pack(fill="both",
-                   expand=True,
-                   side=TOP,
-                   anchor=N)
-        marco.config(
-            width=300,
-            height=100,
-            relief="sunken",
-            bd=5
-        )
+        self.ventana.configure(bg="slateblue1")
+        self.ventana.minsize(width=1500,height=800)
+        self.ventana.maxsize(width=1500,height=800)
 
-        ttk.Button(marco, text="Apuestas Simples", command=self.initAsimples).grid(padx=40, pady=10, row=1, column=5,
-                                                                                     columnspan=2, sticky=W + E)
-        ttk.Button(marco, text="Apuestas automatizadas").grid(padx=40, pady=10, row=2, column=5, columnspan=2,
-                                                              sticky=W + E)
+
+        canvas = tk.Canvas(ventana, width=800, height=500)
+        canvas.grid(columnspan=4)
+        # logo
+        logo = Image.open('Recursos/Auditoria-juego-de-apuestas-online.jpg')
+        logo = ImageTk.PhotoImage(logo)
+        logo_label = tk.Label(image=logo)
+        logo_label.image = logo
+        logo_label.grid(column=2, row=0, sticky=W + E + N + S)
+
+        marco = LabelFrame(
+            self.ventana,
+            text="Seleccione su tipo de apuesta",
+            width=100,
+            font="Raleway",
+            relief="flat",
+            bg="slateblue1",
+            fg="white"
+        )
+        marco.grid(row=0, column=0, pady=0, padx=0, ipadx=0, ipady=335)
+
+        btnApuestaSimple = tk.Button(marco, text="Apuesta Simple")
+        btnApuestaSimple.config(
+            font="Raleway",
+            activebackground="white",
+            bg="dark slate blue",
+            fg="white",
+            bd=5,
+            relief="flat",
+            width=20,
+            command=self.initAsimples
+        )
+        btnApuestaSimple.grid(padx=5, pady=5, row=2, columnspan=2, sticky=W+E)
+        btnApuestaAutomatizada = tk.Button(marco)
+        btnApuestaAutomatizada.configure(
+            text="Apuestas automatizadas",
+            font="Raleway",
+            activebackground="white",
+            bg="dark slate blue",
+            fg="white",
+            bd=5,
+            relief="flat",
+            width=20
+        )
+        btnApuestaAutomatizada.grid(padx=5, pady=5, row=3, columnspan=2, sticky=W+E)
