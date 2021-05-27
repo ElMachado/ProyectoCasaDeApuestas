@@ -10,6 +10,7 @@ class InterfacePrincipal:
         win = Toplevel()
         InterfazApuestaSimple.__init__(self, win)
 
+
     def __init__(self, ventana):
         self.ventana = ventana
         self.ventana.title("Bienvenido a la Casa de apuestas")

@@ -15,7 +15,7 @@
 #     cursor="pirate",
 #     bg="gray",
 #     relief="sunken",
-#     bd=10
+#     bd=1object0
 # )
 # root.mainloop()
 from tkinter import *
