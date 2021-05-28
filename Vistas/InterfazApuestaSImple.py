@@ -4,17 +4,25 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 plt.style.use('ggplot')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from Modelos.Apuesta import Apuesta
+nApuestas = 0
+def contador():
+    global nApuestas
+    nApuestas = nApuestas + 1
+    print("contar() ha sido llamado " + str(nApuestas) + " veces")
 
 class InterfazApuestaSimple:
       def __init__(self, ventana):
         self.ventana = ventana
         self.ventana.title("Apuestas simples")
         self.ventana.configure(bg="slateblue1")
-        self.ventana.minsize(width=1000, height=600)
-        self.ventana.maxsize(width=1000, height=600)
+        self.ventana.minsize(width=1000, height=800)
+        self.ventana.maxsize(width=1000, height=800)
+
+
 
         # Marco
         marco = LabelFrame(
@@ -164,16 +172,43 @@ class InterfazApuestaSimple:
             activebackground="white",
             bg="dark slate blue",
             fg="white",
-            bd=5,
+            bd=0,
             relief="flat",
             width=20
         )
         self.btnApostar.grid(
             row=3,
-            columnspan=2,
-            padx=30
+            columnspan=4,
+            padx=30,
+            pady=30
+        )
+        right_frame = tk.Frame(
+            self.ventana,
+            bg='slateblue4',
+            bd=1.5,
+            width=820,
+            height=400,
+            padx=0,
+            pady=0
+        )
+        right_frame.grid(
+            row=5,
+            columnspan=4,
+            ipady=90,
+            ipadx = 300
+
         )
 
+        figure = plt.Figure(figsize=(4, 3), dpi=80)
+        ax = figure.add_subplot(111)
+        ax.set_title('$Apuestas hechas$')
+        ax.grid(True), ax.set_xlabel('$Número de apuestas$'), ax.set_ylabel('$Saldo actual$')
+        line = FigureCanvasTkAgg(figure, right_frame)
+        line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+
+
+        self.historicoSaldo=np.array([])
+        self.index=np.array([])
         #Evento Entry
         def calCuota(event):
             try:
@@ -209,6 +244,7 @@ class InterfazApuestaSimple:
         self.enProbabilidadDeGanar.bind('<Return>',calCuota)
         #Eventos boton
         def apuesta():
+
             try:
                 saldo = float(self.enSaldo.get())
                 valorApuesta = float(self.enValorApuesta.get())
@@ -263,17 +299,27 @@ class InterfazApuestaSimple:
                         bg="slateblue1",
                         fg="white"
                     ).pack()
+
                 apta = Apuesta(float(saldo),float(valorApuesta),float(probGanar))
                 resultado= apta.apuesta()
+                data=apta.getSaldoActual()
+                contador()
+                print(nApuestas)
+                self.index=np.append(self.index,nApuestas)
+                self.historicoSaldo = np.append(self.historicoSaldo,data)
                 texSaldo.set(f" {round(apta.getSaldoActual(),2)}")
-
+                ax.clear()
+                ax.plot(self.index,self.historicoSaldo,color = 'tab:purple'),
+                ax.grid(True)
+                line.draw()
                 if(resultado==0):
                     print("Gano")
                     textoResultado.set("Gano")
                 else:
                     print("perdio")
                     textoResultado.set("Perdio")
-            except:
+            except ValueError:
+                print("Error",ValueError)
                 global popobject
                 pop = Toplevel(self.ventana)
                 pop.title("My Popup")
@@ -296,3 +342,7 @@ class InterfazApuestaSimple:
                     fg="white"
                 ).pack()
         self.btnApostar.configure(command=apuesta)
+        
+        #GraficaDatos
+
+
