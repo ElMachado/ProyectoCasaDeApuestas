@@ -1,3 +1,6 @@
+from math import factorial
+import random
+
 import numpy.random as rnd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -51,6 +54,13 @@ class Apuesta():
         self.saldoActual = self.saldoInicial - self.valorApostado + 0
         return self.saldoActual.__int__()
 
+    def disBinomial(self,p,x,n):
+        p = 0.75
+        x = 75
+        n = 100
+        nlessx = n - x
+        return (factorial(n) / (factorial(nlessx) * factorial(x))) * (p ** x) * (1 - p) ** (nlessx)
+
     def apuesta(self):
         u = rnd.rand() * self.setCuotaDeApuesta()
         if u <= 1:
@@ -59,17 +69,5 @@ class Apuesta():
             self.setSaldoActualGan()
             return 0
         else:
-            self.setCuotaDeApuesta()
-            self.setValorGanado()
             self.setSaldoActualPer()
             return 1
-
-# AG=np.array([])
-# for i in range(10000):
-#     u = rnd.rand()*apuesta.probabilidadDeGanar
-#     if(u>=1):
-#       G="Gano"
-#     else:
-#       G="perdio"
-#     AG=np.append(AG,G)
-# plt.hist(AG,bins=2,range=[0,1],rwidth=0.8,align="left")

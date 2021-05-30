@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 plt.style.use('ggplot')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from Modelos.Apuesta import Apuesta
+from Modelos.ApuestaSimple import Apuesta
 nApuestas = 0
 def contador():
     global nApuestas
@@ -21,8 +21,6 @@ class InterfazApuestaSimple:
         self.ventana.configure(bg="slateblue1")
         self.ventana.minsize(width=1000, height=800)
         self.ventana.maxsize(width=1000, height=800)
-
-
 
         # Marco
         marco = LabelFrame(
@@ -150,7 +148,7 @@ class InterfazApuestaSimple:
 
         self.lbResultado = Label(
             marco,
-            font=("Raleway", 15),
+            font=("Raleway", 25),
             textvariable=textoResultado,
             bg="slateblue3",
             fg="white",
@@ -182,7 +180,7 @@ class InterfazApuestaSimple:
             padx=30,
             pady=30
         )
-        right_frame = tk.Frame(
+        grafica_frame = tk.Frame(
             self.ventana,
             bg='slateblue4',
             bd=1.5,
@@ -191,19 +189,19 @@ class InterfazApuestaSimple:
             padx=0,
             pady=0
         )
-        right_frame.grid(
+        grafica_frame.grid(
             row=5,
             columnspan=4,
             ipady=90,
             ipadx = 300
 
         )
-
+        #Label Grafica
         figure = plt.Figure(figsize=(4, 3), dpi=80)
         ax = figure.add_subplot(111)
         ax.set_title('$Apuestas hechas$')
         ax.grid(True), ax.set_xlabel('$Número de apuestas$'), ax.set_ylabel('$Saldo actual$')
-        line = FigureCanvasTkAgg(figure, right_frame)
+        line = FigureCanvasTkAgg(figure, grafica_frame)
         line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
 
@@ -308,16 +306,17 @@ class InterfazApuestaSimple:
                 self.index=np.append(self.index,nApuestas)
                 self.historicoSaldo = np.append(self.historicoSaldo,data)
                 texSaldo.set(f" {round(apta.getSaldoActual(),2)}")
+                #Graficación de la linea.
                 ax.clear()
                 ax.plot(self.index,self.historicoSaldo,color = 'tab:purple'),
                 ax.grid(True)
                 line.draw()
                 if(resultado==0):
                     print("Gano")
-                    textoResultado.set("Gano")
+                    textoResultado.set("Ganó")
                 else:
                     print("perdio")
-                    textoResultado.set("Perdio")
+                    textoResultado.set("Perdió")
             except ValueError:
                 print("Error",ValueError)
                 global popobject
@@ -342,7 +341,6 @@ class InterfazApuestaSimple:
                     fg="white"
                 ).pack()
         self.btnApostar.configure(command=apuesta)
-        
-        #GraficaDatos
+
 
 

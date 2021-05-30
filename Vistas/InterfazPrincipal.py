@@ -1,23 +1,29 @@
 ﻿from tkinter import *
 import tkinter as tk
-from PIL import ImageTk, Image
+import PIL
+from PIL import ImageTk
+from PIL import Image
+
+from Vistas.InterfazApuestaAutomatizada import InterfazApuestaAutomatizada
 from Vistas.InterfazApuestaSImple import InterfazApuestaSimple
 
 
 class InterfacePrincipal:
 
-    def initAsimples(self):
+    def initApuSimples(self):
         win = Toplevel()
         InterfazApuestaSimple.__init__(self, win)
 
+    def initApuAutomatizadas(self):
+        win2 = Toplevel()
+        InterfazApuestaAutomatizada.__init__(self, win2)
 
     def __init__(self, ventana):
         self.ventana = ventana
         self.ventana.title("Bienvenido a la Casa de apuestas")
         self.ventana.configure(bg="slateblue1")
-        self.ventana.minsize(width=1500,height=800)
-        self.ventana.maxsize(width=1500,height=800)
-
+        self.ventana.geometry("1500x800")
+        self.ventana.resizable(width=False, height=False)
 
         canvas = tk.Canvas(ventana, width=800, height=500)
         canvas.grid(columnspan=4)
@@ -48,9 +54,9 @@ class InterfacePrincipal:
             bd=5,
             relief="flat",
             width=20,
-            command=self.initAsimples
+            command=self.initApuSimples
         )
-        btnApuestaSimple.grid(padx=5, pady=5, row=2, columnspan=2, sticky=W+E)
+        btnApuestaSimple.grid(padx=5, pady=5, row=2, columnspan=2, sticky=W + E)
         btnApuestaAutomatizada = tk.Button(marco)
         btnApuestaAutomatizada.configure(
             text="Apuestas automatizadas",
@@ -60,6 +66,7 @@ class InterfacePrincipal:
             fg="white",
             bd=5,
             relief="flat",
-            width=20
+            width=20,
+            command=self.initApuAutomatizadas
         )
-        btnApuestaAutomatizada.grid(padx=5, pady=5, row=3, columnspan=2, sticky=W+E)
+        btnApuestaAutomatizada.grid(padx=5, pady=5, row=3, columnspan=2, sticky=W + E)
