@@ -118,7 +118,7 @@ class InterfazApuestaAutomatizada:
             fg="white",
             bd=0,
             pady=10,
-            value=0,
+            value=1,
             indicatoron=1,
             variable=rBtnsIzquierda
         )
@@ -138,7 +138,7 @@ class InterfazApuestaAutomatizada:
             fg="white",
             bd=0,
             pady=10,
-            value=1,
+            value=2,
             indicatoron=1,
             variable=rBtnsIzquierda
 
@@ -191,7 +191,7 @@ class InterfazApuestaAutomatizada:
             fg="white",
             bd=0,
             pady=10,
-            value=0,
+            value=3,
             indicatoron=1,
             variable=rBtnsDerecha,
         )
@@ -212,7 +212,7 @@ class InterfazApuestaAutomatizada:
             bd=0,
             pady=10,
             indicatoron=1,
-            value=1,
+            value=4,
             variable=rBtnsDerecha,
         )
         r4.place(
@@ -249,22 +249,34 @@ class InterfazApuestaAutomatizada:
         self.index = np.array([])
 
         def apuesta():
+            AptAuto.terminarApuesta = 0
             historicoSaldo = np.array([])
             index = np.array([])
-            AptAuto.setSaldoInicial()
+            saldoInicial = AptAuto.setSaldoInicial()
+            AptAuto.saldoActual = saldoInicial
+            AptAuto.saldoAnterior = saldoInicial
+            print("el saldo inicial es", saldoInicial)
+
             for i in range(int(self.nSimulaciones.get())):
-                AptAuto.apuesta(rBtnsIzquierda,rBtnsDerecha)
+                if AptAuto.terminarApuesta != 0:
+                    print("Apuesta terminada")
+                    break
+                AptAuto.apuesta(int(rBtnsIzquierda.get()), int(rBtnsDerecha.get()))
                 data = AptAuto.saldoActual
                 index = np.append(index, int(i))
                 historicoSaldo = np.append(historicoSaldo, data)
                 # Graficación de la linea.
                 # ax.clear()
-                ax.plot(index,historicoSaldo)
+                ax.plot(index, historicoSaldo)
                 ax.grid(True)
                 line.draw()
-                print("el saldo actual es:", AptAuto.saldoActual)
-                if (AptAuto.saldoActual <= 0):
-                    break;
+                print(f"Apuesta N°:{i}")
+                print(f"La probabilidad de ganar es: {AptAuto.probabilidadDeGanar}")
+                print(f"La cuota de apuesta es: {AptAuto.cuotaDeApuesta}")
+                print(f"El valor apostado es: {AptAuto.valorApostado}")
+                print(f"El valor ganado es: {AptAuto.valorGanado}")
+                print(f"El saldo actual es: {AptAuto.saldoActual}")
+
         # Botón apuestas
         self.btnRealizarApuestas = Button(
             self.marco,

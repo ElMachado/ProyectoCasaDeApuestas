@@ -54,16 +54,9 @@ class Apuesta():
         self.saldoActual = self.saldoInicial - self.valorApostado + 0
         return self.saldoActual.__int__()
 
-    def disBinomial(self,p,x,n):
-        p = 0.75
-        x = 75
-        n = 100
-        nlessx = n - x
-        return (factorial(n) / (factorial(nlessx) * factorial(x))) * (p ** x) * (1 - p) ** (nlessx)
-
     def apuesta(self):
-        u = rnd.rand() * self.setCuotaDeApuesta()
-        if u <= 1:
+        u = rnd.rand()
+        if u <= self.probabilidadDeGanar:
             self.setCuotaDeApuesta()
             self.setValorGanado()
             self.setSaldoActualGan()

@@ -1,14 +1,15 @@
-import numpy as np
 import numpy.random as rnd
 
 
 class AptAuto:
     saldoInicial = 0
     saldoActual = saldoInicial
+    saldoAnterior = 0
     valorApostado = 0
     valorGanado = 0
     probabilidadDeGanar = 0.00
     cuotaDeApuesta = 0.00
+    terminarApuesta = 0
 
     @staticmethod
     def estrategiaConservadora():
@@ -22,17 +23,23 @@ class AptAuto:
 
     @staticmethod
     def estrategiaDerrochadora():
-        AptAuto.valorApostado = rnd.randint(5000, 50000)
-        return AptAuto.valorApostado
+        if AptAuto.saldoActual > 30000:
+            AptAuto.valorApostado = rnd.randint(30000, 100000)
+            return AptAuto.valorApostado
+        else:
+            AptAuto.terminarApuesta = 1
 
     @staticmethod
     def estrategiaEconomizadora():
-        AptAuto.valorApostado = rnd.randint(2000, 5000)
-        return AptAuto.valorApostado
+        if AptAuto.saldoActual > 2000:
+            AptAuto.valorApostado = rnd.randint(2000, 30000)
+            return AptAuto.valorApostado
+        else:
+            AptAuto.terminarApuesta = 1
 
     @staticmethod
     def setCuotaDeApuesta(estraProbGan):
-        if estraProbGan == 1:
+        if estraProbGan == 2:
             estrategia = AptAuto.estrategiaArriesgada()
         else:
             estrategia = AptAuto.estrategiaConservadora()
@@ -47,35 +54,36 @@ class AptAuto:
 
     @staticmethod
     def setSaldoActualGan():
-        AptAuto.saldoActual = AptAuto.saldoInicial - AptAuto.valorApostado + AptAuto.valorGanado
+        AptAuto.saldoActual = AptAuto.saldoAnterior - AptAuto.valorApostado + AptAuto.valorGanado
+        AptAuto.saldoAnterior = AptAuto.saldoActual
         return int(AptAuto.saldoActual)
 
     @staticmethod
     def setSaldoActualPer():
-        AptAuto.saldoActual = AptAuto.saldoInicial - AptAuto.valorApostado
-        return AptAuto.saldoActual
+        AptAuto.saldoActual = AptAuto.saldoAnterior - AptAuto.valorApostado
+        AptAuto.saldoAnterior = AptAuto.saldoActual
+        return int(AptAuto.saldoActual)
 
     @staticmethod
     def setSaldoInicial():
-        AptAuto.saldoInicial = rnd.randint(20000, 100000)
+        AptAuto.saldoInicial = rnd.randint(30000, 100000)
+        return AptAuto.saldoInicial
 
     @staticmethod
     def apuesta(estraProbGan, estraValApos):
-        if estraValApos == 1:
+        if estraValApos == 4:
             AptAuto.estrategiaDerrochadora()
         else:
             AptAuto.estrategiaEconomizadora()
-
-        u = rnd.rand() * AptAuto.setCuotaDeApuesta(estraProbGan)
-        if u <= AptAuto.cuotaDeApuesta:
+        AptAuto.setCuotaDeApuesta(estraProbGan)
+        u = rnd.rand()
+        if u <= AptAuto.probabilidadDeGanar:
             AptAuto.setValorGanado()
             AptAuto.setSaldoActualGan()
             print("gano")
-
         else:
             AptAuto.setSaldoActualPer()
             print("perdio")
-
 
 # historicoSaldo = np.array([])
 # index = np.array([])
